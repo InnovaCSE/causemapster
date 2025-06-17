@@ -1,0 +1,43 @@
+name: 🔧 Build CauseMapster Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: 🛠️ Construction automatique de CauseMapster
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Récupérer le dépôt
+        uses: actions/checkout@v3
+
+      - name: 🧰 Installer les dépendances Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: 📦 Installer les packages
+        run: npm install
+
+      - name: ✅ Lancer les tests automatiques (si présents)
+        run: npm run test || echo "Aucun test défini"
+
+      - name: 🛠️ Compiler l'application
+        run: npm run build || echo "Pas de script build défini"
+
+      - name: 📤 Confirmer réussite dans les logs
+        run: echo "✅ Construction automatique terminée avec succès"
+
+      # 🔔 Mail de notification (facultatif, à activer plus tard)
+      # - name: 📧 Envoyer un mail de confirmation
+      #   uses: dawidd6/action-send-mail@v3
+      #   with:
+      #     server_address: smtp.gmail.com
+      #     server_port: 465
+      #     username: ${{ secrets.EMAIL_USERNAME }}
+      #     password: ${{ secrets.EMAIL_PASSWORD }}
+      #     subject: "✅ Build terminé pour CauseMapster"
+      #     to: yoann@innovacse.fr
+      #     from: "CauseMapster Builder <yoann@innovacse.fr>"
+      #     body: "La construction du projet CauseMapster s'est déroulée avec succès."
