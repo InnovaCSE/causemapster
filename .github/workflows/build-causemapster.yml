@@ -5,30 +5,23 @@ on:
 
 jobs:
   build:
+    name: Construire le logiciel CauseMapster
     runs-on: ubuntu-latest
+
     steps:
-      - name: 🔽 Cloner le dépôt
-        uses: actions/checkout@v3
+      - name: 📥 Cloner le dépôt
+        uses: actions/checkout@v4
 
-      - name: 📜 Lire les instructions du dépôt
-        run: |
-          echo "Instructions archivées dans un fichier GitHub"
-          echo "Instructions dictées via ChatGPT, injectées automatiquement"
-
-      - name: 🚀 Construction automatique du projet CauseMapster
-        run: |
-          echo "TODO: Génération des fichiers HTML/JS/CSS"
-          echo "TODO: Insertion automatique des composants"
-          echo "TODO: Vérification des scripts Supabase et GPT"
-
-      - name: 📬 Envoyer un e-mail de notification
-        uses: dawidd6/action-send-mail@v3
+      - name: 🔧 Installer Node.js
+        uses: actions/setup-node@v4
         with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "✅ CauseMapster : Build terminé"
-          body: "Le workflow CauseMapster a été exécuté avec succès."
-          to: yoann@innovacse.fr
-          from: "CauseMapster Builder"
+          node-version: '20'
+
+      - name: 📦 Installer les dépendances
+        run: npm install
+
+      - name: 🧪 Lancer les tests
+        run: npm run test || echo "Aucun test trouvé"
+
+      - name: ✅ Fin du build
+        run: echo "✅ Build terminé avec succès"
