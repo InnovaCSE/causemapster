@@ -1,0 +1,194 @@
+Crée un projet web complet nommé **CauseMapster**, structuré pour analyser les accidents du travail via la méthode de l’Arbre des Causes de l’INRS.
+
+### Objectifs :
+- Interface en **français**
+- Design professionnel : **gris clair et orange** dominants
+- **Ergonomique et visuel**, avec **pictogrammes**, blocs bien séparés et **consignes simples**
+- Fonctionnement en 4 étapes
+- Connexion à **Supabase** (authentification, base de données, stockage)
+- Intégration de **ChatGPT via API** pour l’analyse automatique
+- Projet **modulaire et évolutif vers un SaaS freemium/premium**
+
+---
+
+### Structure du projet :
+- `/pages/` : index, login, register, formulaire1, formulaire2, formulaire3, arbre_des_causes
+- `/components/` : header, footer, navbar, sidebar, bloc_formulaire, bouton_ia, tableau_faits, etc.
+- `/services/` : supabaseClient.js, openaiClient.js, authService.js
+- `/styles/` : style.css ou Tailwind intégré
+- `.env` pour clé API OpenAI
+
+---
+
+### Fonctionnalités à inclure :
+
+#### 🧭 Page d’accueil (`index.html`)
+- Nom de l’app : **CauseMapster**
+- Message de bienvenue
+- Boutons :
+  - 🔐 Se connecter
+  - ✍️ S’inscrire
+  - 🆕 Nouvelle analyse d’accident
+
+---
+
+### 🔐 Authentification (avec Supabase Auth)
+- Page de **connexion** (email + mot de passe)
+- Page de **création de compte**
+- Rôles utilisateurs (utilisateur / admin)
+- Stockage dans Supabase
+- Accès restreint aux pages d’analyse si non connecté
+- Page "Mon compte" avec :
+  - Email
+  - Mot de passe modifiable
+  - Liste des analyses enregistrées
+
+---
+
+### 📝 Étape 1 – **Déclaration d'accident du travail**
+Formulaire avec blocs :
+1. 📍 **Informations générales**
+   - Numéro automatique `ACC-AAAA-NNN`
+   - Date (par défaut = aujourd’hui)
+   - Heure (auto)
+   - Lieu de l’accident
+   - Établissement concerné
+   - 📝 Consigne : « Complétez les informations générales sur l’accident. »
+
+2. 🗂️ **Faits ultimes**
+   - Ajout de plusieurs faits ultimes distincts
+   - Description de l’accident : champ texte **ou** enregistrement vocal (Web Speech API)
+   - 📝 Consigne : « Décrivez les faits ultimes ou dictez-les à voix haute. »
+
+3. ⚠️ **Gravité perçue**
+   - Options : mineur, modéré, grave (boutons radio ou menu)
+   - 📝 Consigne : « Sélectionnez le niveau de gravité tel que vous l'avez perçu. »
+
+4. 🧍‍♂️ **Données victime**
+   - Case à cocher "Anonymiser"
+   - Sinon : nom, prénom, fonction
+   - 📝 Consigne : « Complétez les données si la victime est identifiée. »
+
+5. 👁️ **Témoins**
+   - Bouton "Ajouter un témoin"
+   - Formulaire : nom, prénom, fonction
+   - 📝 Consigne : « Cliquez pour ajouter les témoins un par un. »
+
+6. 🧾 **Pièces jointes**
+   - Bouton "Ajouter un fichier"
+   - Aperçu des fichiers ajoutés
+   - Stockage via **Supabase Storage**
+   - 📝 Consigne : « Sélectionnez un ou plusieurs documents en lien avec l’accident. »
+
+✅ Boutons en bas :
+- 💾 Enregistrer l’accident
+- ➡️ Suivant : Analyser les témoignages
+- ⬅️ Retour à la liste
+
+---
+
+### 📋 Étape 2 – **Analyse des témoins**
+
+1. 🧍‍♂️ **Partie 1 : victime**
+   - Affiche les infos connues
+   - Zone d’enregistrement vocal ou texte libre
+   - Possibilité de **sélectionner à la souris** des fragments :
+     - 📌 Fait avéré
+     - 💬 Opinion
+     - ❓ Élément à vérifier
+   - Génère des bulles (stockées dans Supabase)
+   - ✅ Bouton : "🧠 Lancer l’analyse IA" (ChatGPT API – GPT-4)
+
+2. 👥 **Partie 2 : témoins**
+   - Liste déroulante des témoins ajoutés
+   - Pour chaque témoin, un bloc identique à celui de la victime
+   - Ajout possible de nouveaux témoins
+
+3. 📊 **Récapitulatif**
+   - Tableau avec 4 colonnes :
+     - Fait avéré
+     - Opinion
+     - Élément à vérifier
+     - Autre
+   - Les bulles s'affichent dans la bonne colonne automatiquement
+
+✅ Boutons :
+- 💾 Enregistrer (brouillon)
+- ➡️ Suivant : Construire l’arbre des causes
+- 🗑️ Supprimer cette analyse
+
+---
+
+### 🧾 Étape 3 – **Résumé de l’accident analysé**
+- Tableau de tous les éléments analysés (modifiable)
+- Colonne supplémentaire : ✅ Fait inhabituel ? (oui/non)
+- Bouton pour **ajouter un fait manuel**
+
+#### 📂 **Bloc preuves matérielles**
+- Tableau :
+  - Numéro automatique
+  - Description
+  - Utilité pour l’analyse ? (oui/non)
+  - ✅ Validation de chaque ligne
+  - Possibilité d’ajouter des pièces
+  - ✅ Ajout auto dans Supabase Storage
+
+✅ Boutons :
+- 💾 Enregistrer en brouillon
+- ➡️ Suivant : Construire l’arbre
+- 🗑️ Supprimer cette analyse
+
+---
+
+### 🌳 Étape 4 – **Arbre des Causes**
+- Arbre horizontal (droite → gauche)
+- Faits :
+  - 🔴 Faits nécessaires = cercle rouge
+  - 🟠 Faits inhabituels = cercle orange
+  - 🟩 Faits habituels = rectangle vert
+- Liaisons :
+  - 🔁 Enchaînement
+  - ➕ Conjonction
+  - ❌ Disjonction
+- 🧠 Bouton : "Analyser automatiquement l’arbre des causes" (via GPT-4)
+- Edition libre des liaisons et faits
+- Tableau final avec faits nécessaires :
+  - Peut-on supprimer ? → mesure de prévention
+  - Si non, peut-on rendre moins dangereux ? → autre mesure
+  - ✅ Aide IA activable pour chaque ligne
+
+✅ Boutons :
+- 💾 Enregistrer
+- 📤 Exporter en PDF
+- 🖼️ Exporter en image
+
+---
+
+### 🎓 Préparation SaaS
+- Stocke le rôle utilisateur
+- Variable `plan_utilisateur` (gratuit/premium)
+- Interface prête pour ajout Stripe plus tard
+- Limite : 3 analyses max si non premium
+- Affichage d’un message “fonctionnalité premium” si atteint
+
+---
+
+### 🔗 Connexion Supabase
+- Tables à créer :
+  - utilisateurs, accidents, temoins, fragments, validations, preuves, sessions
+- Stockage Supabase : fichiers (PDF, images)
+- Auth Supabase pour login/register
+- Appels API OpenAI via clé privée sécurisée (`process.env.OPENAI_API_KEY`)
+
+---
+
+### ✅ Design final
+- Style propre, responsive
+- Couleurs : orange + gris clair
+- Icônes claires pour chaque action
+- Formulaires modulaires et visuellement séparés
+- Consignes simples dans chaque bloc
+
+---
+
+Génère le projet complet avec fichiers HTML, JS, CSS, les composants réutilisables, et les connexions API/Supabase prêtes à remplir.

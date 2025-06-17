@@ -1,0 +1,72 @@
+e veux que tu crées une page React /auto-test (fichier AutoTest.tsx) pour simuler automatiquement un test complet du logiciel Arbre des Causes.
+L’objectif est de valider tout le parcours utilisateur, sans intervention humaine. À la fin, la page doit afficher si le logiciel est 100 % fonctionnel, ou lister les erreurs détectées avec précision.
+
+🔁 Étapes à automatiser (dans cet ordre) :
+Création d’un accident de travail
+
+Simule la saisie d’un accident (date, lieu, établissement, faits ultimes, victime, témoins, fichiers).
+
+Enregistre dans Supabase (table accidents).
+
+Vérifie que les données sont bien présentes.
+
+Ajout de témoins
+
+Ajoute au moins deux témoins à l’accident.
+
+Stocke dans Supabase (temoins).
+
+Vérifie la liaison accident ↔ témoins.
+
+Analyse automatique des témoignages
+
+Simule une transcription avec plusieurs lignes.
+
+Classe chaque ligne en : Fait avéré, Opinion, À vérifier, Preuve.
+
+Enregistre chaque fragment dans fragments_temoignages.
+
+Vérifie que tous les types sont bien présents et que le total correspond au nombre de lignes.
+
+Génération automatique de l’arbre des causes
+
+Injecte au moins 3 faits nécessaires + 2 faits habituels.
+
+Crée des liens logiques : enchaînement, conjonction, disjonction.
+
+Enregistre dans Supabase (arbre_causes, liens).
+
+Validation de l’arbre par rôle
+
+Simule validation par 2 rôles : CSE + employeur.
+
+Enregistre les validations dans Supabase.
+
+Vérifie que la signature est présente et horodatée.
+
+Export de l’arbre
+
+Simule la génération d’un PNG de l’arbre.
+
+Vérifie que le fichier est téléchargeable ou correctement généré (mock OK si pas d’image réelle).
+
+Nettoyage automatique
+
+Supprime les données testées à la fin ou isole-les dans un ID test-auto-YYYYMMDD.
+
+Affichage du résultat final
+
+Si tout fonctionne : ✅ Logiciel pleinement opérationnel
+
+Sinon : ❌ Liste précise des étapes ayant échoué (avec ID accident + description de l’erreur Supabase)
+
+🧠 Contraintes techniques :
+Utilise Supabase (via supabaseClient.ts)
+
+Affiche un indicateur de progression (étape 1/7, etc.)
+
+Envoie les erreurs dans la console aussi
+
+Code TypeScript propre et commenté
+
+Page accessible via /auto-test
