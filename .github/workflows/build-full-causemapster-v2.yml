@@ -30,18 +30,3 @@ jobs:
       - name: ✅ Étape 5 – Effectuer un test global
         run: |
           echo "Simulation terminée avec succès ✅"
-
-      - name: ✅ Étape 6 – Envoyer un mail de confirmation (test)
-        if: success()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "✅ Build CauseMapster terminé"
-          to: ${{ secrets.MAIL_DEST }}
-          from: "CauseMapster Bot <${{ secrets.MAIL_USERNAME }}>"
-          body: |
-            Le processus de build CauseMapster s'est bien terminé.
-            Tous les fichiers ont été vérifiés et les tests de base sont passés avec succès.
